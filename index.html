@@ -256,4 +256,431 @@
     }
     .badge.type{ color:var(--text); border-color: rgba(167,139,250,0.35); background: rgba(167,139,250,0.12); }
     .badge.status-lc{ border-color: rgba(134,239,172,0.35); background: rgba(134,239,172,0.12); color:var(--text); }
-    .badge.status-nt{ border-color: rgba(253,230,
+    .badge.status-nt{ border-color: rgba(253,230,138,0.45); background: rgba(253,230,138,0.13); color:var(--text); }
+    .badge.status-vu, .badge.status-en, .badge.status-cr{
+      border-color: rgba(252,165,165,0.45); background: rgba(252,165,165,0.13); color:var(--text);
+    }
+
+    .summary{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:14px;
+    }
+
+    details{
+      margin-top:10px;
+      border-top:1px solid var(--line);
+      padding-top:10px;
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--text);
+      font-weight:700;
+      outline:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .chev{
+      width: 10px; height: 10px; display:inline-block;
+      border-right:2px solid var(--muted);
+      border-bottom:2px solid var(--muted);
+      transform: rotate(-45deg);
+      transition: transform .16s ease;
+      margin-left:10px;
+      flex: 0 0 auto;
+    }
+    details[open] .chev{ transform: rotate(45deg); }
+
+    .kv{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap:8px 10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    .k{ color: rgba(255,255,255,0.78); }
+    @media (prefers-color-scheme: light){
+      .k{ color: rgba(0,0,0,0.72); }
+    }
+
+    .empty{
+      margin-top:14px;
+      border:1px dashed var(--line);
+      border-radius:var(--radius);
+      padding:14px;
+      color:var(--muted);
+      background: rgba(255,255,255,0.03);
+    }
+
+    footer{
+      margin-top:28px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn:hover{ background: rgba(255,255,255,0.08); }
+    .btn:active{ transform: translateY(1px); }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="title">動物図鑑</div>
+      <div class="sub">特徴・生態・保全状況を、検索と分類で素早く把握</div>
+    </div>
+    <nav aria-label="サイト内ナビゲーション">
+      <a class="navlink" href="#catalog">図鑑</a>
+      <a class="navlink" href="#about">サイト方針</a>
+      <a class="navlink" href="#data">データ</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero" id="about">
+    <h1>動物を「要点で」説明する</h1>
+    <p>
+      各動物を、分類・生息地・食性・行動特性・寿命・保全状況の軸で整理します。検索（キーワード）と絞り込み（分類）で、見たい動物だけを高速に表示します。
+      画像は使わず、情報密度と読みやすさを優先しています。
+    </p>
+  </section>
+
+  <section class="controls" aria-label="検索と絞り込み" id="catalog">
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label for="q">キーワード検索（和名 / 学名 / 生息地 / 特徴）</label>
+          <input id="q" type="search" placeholder="例：森林 / 肉食 / Panthera / 日本" autocomplete="off" />
+        </div>
+        <div class="field" style="max-width:280px;">
+          <label for="sort">並び替え</label>
+          <select id="sort">
+            <option value="name">和名（昇順）</option>
+            <option value="status">保全状況（危機が高い順）</option>
+            <option value="type">分類（五十音）</option>
+          </select>
+        </div>
+        <button class="btn" id="reset" type="button" aria-label="条件をリセット">リセット</button>
+      </div>
+
+      <div class="chips" role="group" aria-label="分類フィルタ">
+        <!-- JSで生成 -->
+      </div>
+
+      <div class="meta">
+        <div id="count">- 件</div>
+        <div id="activeFilters">フィルタ：なし</div>
+      </div>
+    </div>
+
+    <div class="panel" id="data">
+      <div style="font-weight:800; letter-spacing:0.01em;">読み方</div>
+      <div style="color:var(--muted); line-height:1.65; margin-top:8px; font-size:14px;">
+        <ul style="margin:0; padding-left:18px;">
+          <li>カード上部：和名 / 学名、分類、保全状況</li>
+          <li>「詳細」を開くと、生息地・食性・特徴・寿命などを確認できます</li>
+          <li>このページは <strong>index.html 1枚</strong> だけで動作（CSS/JS 内蔵）します</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:10px; color:var(--muted); font-size:12px;">
+        ※保全状況は例示です（実サイトでは出典と更新日を明記してください）。
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <div class="empty" id="empty" hidden>
+      条件に一致する動物が見つかりませんでした。キーワードを短くするか、分類フィルタを解除してください。
+    </div>
+  </main>
+
+  <footer>
+    <div><strong>備考：</strong>本ファイルはサンプルです。実運用では、各説明文の出典（書籍/論文/公的データ）と更新日、用語の定義（例：IUCN区分）を明記してください。</div>
+  </footer>
+</div>
+
+<script>
+  // ====== データ（ここを増やすだけで図鑑を拡張できます） ======
+  // status: LC/NT/VU/EN/CR/DD など（例）
+  const ANIMALS = [
+    {
+      id:"lion",
+      jp:"ライオン",
+      latin:"Panthera leo",
+      type:"哺乳類",
+      status:"VU",
+      habitat:"サバンナ、草原、疎林（主にアフリカ）",
+      diet:"肉食（主に大型草食動物）",
+      traits:"群れ（プライド）で生活し、協調して狩りを行う。オスはたてがみを持つことが多い。",
+      lifespan:"野生：約10–14年（地域差あり）",
+      note:"生息地の減少、獲物資源の低下、人間との軋轢が主要リスク。"
+    },
+    {
+      id:"orca",
+      jp:"シャチ",
+      latin:"Orcinus orca",
+      type:"哺乳類",
+      status:"DD",
+      habitat:"世界の海（寒冷〜温帯を中心に広域）",
+      diet:"肉食（魚類・海獣など。群れ/地域で嗜好が異なる）",
+      traits:"高度な社会性を持ち、群れで協調行動。音声コミュニケーションが発達。",
+      lifespan:"メス：数十年〜（長寿個体あり） / オス：比較的短い傾向",
+      note:"系群ごとの保全評価が重要（“種全体”では実態を見落とすことがある）。"
+    },
+    {
+      id:"peregrine",
+      jp:"ハヤブサ",
+      latin:"Falco peregrinus",
+      type:"鳥類",
+      status:"LC",
+      habitat:"崖・都市高層部・海岸など（広域分布）",
+      diet:"肉食（主に鳥類）",
+      traits:"急降下（ストゥープ）で獲物を捕らえる。都市部にも適応しやすい。",
+      lifespan:"野生：数年〜十数年（環境・事故率で変動）",
+      note:"過去に農薬等で減少した地域があり、規制と保護で回復した例もある。"
+    },
+    {
+      id:"komodo",
+      jp:"コモドドラゴン",
+      latin:"Varanus komodoensis",
+      type:"爬虫類",
+      status:"EN",
+      habitat:"インドネシアの一部島嶼（乾燥林・サバンナ）",
+      diet:"肉食（シカ等。死肉も利用）",
+      traits:"大型のオオトカゲ。待ち伏せと追跡を組み合わせる。島嶼生態系の頂点捕食者。",
+      lifespan:"野生：数十年とされる（推定を含む）",
+      note:"生息域が限られ、気候変動・開発・獲物減少の影響を受けやすい。"
+    },
+    {
+      id:"axolotl",
+      jp:"ウーパールーパー",
+      latin:"Ambystoma mexicanum",
+      type:"両生類",
+      status:"CR",
+      habitat:"メキシコの一部湖沼・水路（自然域は限定的）",
+      diet:"肉食（小型水生動物など）",
+      traits:"幼形成熟（成長しても幼生形質を保つ）で知られる。研究モデルとしても重要。",
+      lifespan:"飼育下：10年以上の例も（条件依存）",
+      note:"生息地の都市化・水質悪化・外来種が大きな脅威。"
+    },
+    {
+      id:"clownfish",
+      jp:"カクレクマノミ",
+      latin:"Amphiprion ocellaris",
+      type:"魚類",
+      status:"LC",
+      habitat:"サンゴ礁域（インド太平洋の一部）",
+      diet:"雑食（小型甲殻類・プランクトン等）",
+      traits:"イソギンチャクと共生。社会構造があり、最大個体がメスになりやすい（性転換）。",
+      lifespan:"飼育下：10年超の例（条件依存）",
+      note:"サンゴ礁の劣化は間接的に影響。"
+    },
+    {
+      id:"octopus",
+      jp:"マダコ",
+      latin:"Octopus vulgaris（近縁群を含む場合あり）",
+      type:"無脊椎動物",
+      status:"LC",
+      habitat:"沿岸域（岩礁・砂泥底など）",
+      diet:"肉食（甲殻類・貝類・魚類）",
+      traits:"高い学習能力と擬態・逃避行動。柔軟な体で狭所に侵入可能。",
+      lifespan:"一般に短命（1〜2年程度の種が多い）",
+      note:"資源管理・漁獲圧の影響が議論されることがある。"
+    },
+    {
+      id:"honeybee",
+      jp:"セイヨウミツバチ",
+      latin:"Apis mellifera",
+      type:"昆虫",
+      status:"LC",
+      habitat:"多様（人為的飼育を含め広域）",
+      diet:"花蜜・花粉",
+      traits:"社会性昆虫。受粉を通じて生態系と農業に大きく関与。",
+      lifespan:"働き蜂：数週間〜（季節で変動） / 女王：年単位",
+      note:"病害・農薬・栄養不足・気候要因など複合的なストレスが問題化する地域がある。"
+    }
+  ];
+
+  // ====== UI状態 ======
+  const TYPES = ["すべて", ...Array.from(new Set(ANIMALS.map(a => a.type))).sort((a,b)=>a.localeCompare(b,'ja'))];
+  let activeType = "すべて";
+  let query = "";
+  let sortMode = "name";
+
+  const elGrid = document.getElementById("grid");
+  const elEmpty = document.getElementById("empty");
+  const elQ = document.getElementById("q");
+  const elSort = document.getElementById("sort");
+  const elCount = document.getElementById("count");
+  const elActiveFilters = document.getElementById("activeFilters");
+  const elChips = document.querySelector(".chips");
+  const elReset = document.getElementById("reset");
+
+  // ====== 保全状況の並び（危機が高い順） ======
+  const statusRank = { "CR":0, "EN":1, "VU":2, "NT":3, "LC":4, "DD":5, "NE":6 };
+
+  function statusLabel(s){
+    const map = {
+      "LC":"LC（低懸念）",
+      "NT":"NT（準危急）",
+      "VU":"VU（危急）",
+      "EN":"EN（危機）",
+      "CR":"CR（深刻な危機）",
+      "DD":"DD（情報不足）",
+      "NE":"NE（未評価）"
+    };
+    return map[s] || s;
+  }
+
+  function statusClass(s){
+    if(s === "LC") return "status-lc";
+    if(s === "NT") return "status-nt";
+    if(["VU","EN","CR"].includes(s)) return "status-" + s.toLowerCase();
+    return "";
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function buildChips(){
+    elChips.innerHTML = "";
+    TYPES.forEach(t => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chip";
+      btn.setAttribute("aria-pressed", String(t === activeType));
+      btn.textContent = t;
+      btn.addEventListener("click", () => {
+        activeType = t;
+        // update pressed states
+        [...elChips.children].forEach(c => c.setAttribute("aria-pressed", String(c.textContent === activeType)));
+        render();
+      });
+      elChips.appendChild(btn);
+    });
+  }
+
+  function matches(a){
+    const q = query.trim().toLowerCase();
+    const typeOk = (activeType === "すべて") || (a.type === activeType);
+    if(!typeOk) return false;
+    if(!q) return true;
+
+    const hay = [
+      a.jp, a.latin, a.type, a.status,
+      a.habitat, a.diet, a.traits, a.lifespan, a.note
+    ].join(" ").toLowerCase();
+
+    return hay.includes(q);
+  }
+
+  function sortAnimals(list){
+    const copy = [...list];
+    if(sortMode === "name"){
+      copy.sort((a,b)=>a.jp.localeCompare(b.jp,'ja'));
+    }else if(sortMode === "status"){
+      copy.sort((a,b)=>(statusRank[a.status] ?? 99) - (statusRank[b.status] ?? 99) || a.jp.localeCompare(b.jp,'ja'));
+    }else if(sortMode === "type"){
+      copy.sort((a,b)=>a.type.localeCompare(b.type,'ja') || a.jp.localeCompare(b.jp,'ja'));
+    }
+    return copy;
+  }
+
+  function render(){
+    const filtered = sortAnimals(ANIMALS.filter(matches));
+    elGrid.innerHTML = "";
+
+    elCount.textContent = `${filtered.length} 件`;
+    const f1 = activeType === "すべて" ? "分類：すべて" : `分類：${activeType}`;
+    const f2 = query.trim() ? `検索：「${query.trim()}」` : "検索：なし";
+    elActiveFilters.textContent = `フィルタ：${f1} / ${f2}`;
+
+    elEmpty.hidden = filtered.length !== 0;
+
+    filtered.forEach(a => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="cardhead">
+          <div class="nameblock">
+            <h2 class="jp">${escapeHtml(a.jp)}</h2>
+            <div class="latin">${escapeHtml(a.latin)}</div>
+          </div>
+          <div class="badges" aria-label="分類と保全状況">
+            <div class="badge type">${escapeHtml(a.type)}</div>
+            <div class="badge ${statusClass(a.status)}">${escapeHtml(statusLabel(a.status))}</div>
+          </div>
+        </div>
+
+        <p class="summary">${escapeHtml(a.traits)}</p>
+
+        <details>
+          <summary>
+            <span>詳細</span>
+            <span class="chev" aria-hidden="true"></span>
+          </summary>
+          <div class="kv" role="list">
+            <div class="k" role="listitem">生息地</div><div>${escapeHtml(a.habitat)}</div>
+            <div class="k" role="listitem">食性</div><div>${escapeHtml(a.diet)}</div>
+            <div class="k" role="listitem">寿命</div><div>${escapeHtml(a.lifespan)}</div>
+            <div class="k" role="listitem">メモ</div><div>${escapeHtml(a.note)}</div>
+          </div>
+        </details>
+      `;
+      elGrid.appendChild(card);
+    });
+  }
+
+  // ====== イベント ======
+  elQ.addEventListener("input", (e) => {
+    query = e.target.value || "";
+    render();
+  });
+
+  elSort.addEventListener("change", (e) => {
+    sortMode = e.target.value;
+    render();
+  });
+
+  elReset.addEventListener("click", () => {
+    activeType = "すべて";
+    query = "";
+    sortMode = "name";
+    elQ.value = "";
+    elSort.value = "name";
+    [...elChips.children].forEach(c => c.setAttribute("aria-pressed", String(c.textContent === activeType)));
+    render();
+  });
+
+  // init
+  buildChips();
+  render();
+</script>
+</body>
+</html>
